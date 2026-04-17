@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Crazy Menu - English Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Montserrat', Arial, sans-serif;
+      background: linear-gradient(120deg, #fbeee6 0%, #fff9f2 100%);
+      min-height: 100vh;
+      margin: 0;
+      color: #312c25;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .container {
+      background: #fff9f2;
+      border-radius: 22px;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.13);
+      padding: 2.5rem 2.2rem 2rem 2.2rem;
+      margin-top: 50px;
+      max-width: 430px;
+      width: 100%;
+    }
+    .logo {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+      color: #c0662a;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      color: #c0662a;
+    }
+    .input-group label {
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 0.3rem;
+      display: block;
+      color: #a9875c;
+    }
+    input[type='text'] {
+      width: 100%;
+      font-size: 1.05rem;
+      padding: 0.7rem;
+      border: 2px solid #ffd8b5;
+      border-radius: 7px;
+      background: #fff;
+      box-sizing: border-box;
+    }
+    button, .big-btn {
+      background: linear-gradient(90deg, #ffc285 5%, #ffa853 98%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.9rem 2.1rem;
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-size: 1.07rem;
+      font-weight: 700;
+      box-shadow: 0 2.5px 8px #ffdeb6;
+      cursor: pointer;
+      margin: 1.2rem 0 0.5rem 0;
+      transition: box-shadow 0.12s, background 0.15s;
+    }
+    button:active, .big-btn:active {
+      box-shadow: 0 1.5px 3px #ffe0c7;
+      background: #ff9900;
+    }
+    .word-list {
+      display: flex;
+      gap: 0.7rem;
+      justify-content: center;
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: #c0662a;
+      margin-bottom: 1.6rem;
+      margin-top: 0.8rem;
+    }
+    .timer {
+      font-size: 3rem;
+      font-weight: 800;
+      color: #fe944a;
+      text-align: center;
+      margin-bottom: 1rem;
+      background: #ffe5cc;
+      border-radius: 18px;
+      padding: 0.6rem 0rem;
+      letter-spacing: 0.12em;
+    }
+    textarea {
+      width: 100%;
+      min-height: 110px;
+      max-height: 250px;
+      padding: 1rem;
+      font-size: 1.1rem;
+      font-family: 'Montserrat', Arial, sans-serif;
+      background: #fdf4eb;
+      border-radius: 10px;
+      border: 2px solid #ffd8b5;
+      box-sizing: border-box;
+      resize: vertical;
+      margin-bottom: 0.4rem;
+      color: #443621;
+    }
+    .result-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 1.2rem;
+    }
+    .ai-score {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #441e00;
+      margin: 1.1rem 0 0.6rem 0;
+      background: #ffefd6;
+      border-radius: 8px;
+      padding: 0.45rem 1.2rem;
+      letter-spacing: 0.09em;
+    }
+    .hidden {
+      display: none !important;
+      pointer-events: none;
+    }
+    .save-btn {
+      background: linear-gradient(90deg, #ffb05e 5%, #ff8931 98%);
+    }
+    .speak-btn {
+      background: linear-gradient(90deg, #36c6ab 10%, #2cbcb0 95%);
+      box-shadow: 0 2.5px 9px #b0e3da;
+    }
+    .admin-btn {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      background: #ece6de;
+      color: #b0711f;
+      font-size: 1.03rem;
+      padding: 0.65rem 1.4rem;
+      z-index: 99;
+      border-radius: 7px;
+      box-shadow: 0 2.5px 9px #ffcfa9;
+      border: 2px dashed #ffe3bc;
+      opacity: 0.4;
+      transition: opacity 0.23s;
+    }
+    .admin-btn:hover {
+      opacity: 1;
+      background: #fff9f2;
+      color: #8c6326;
+      box-shadow: 0 3.5px 14px #ffcea3;
+    }
+    @media (max-width: 575px) {
+      .container {
+        max-width: 99vw;
+        margin: 16px 0 0 0;
+        padding: 1.1rem 0.8rem 1.4rem 0.8rem;
+      }
+      .timer {
+        font-size: 2.2rem;
+      }
+      .ai-score {
+        font-size: 1.07rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="mainContainer">
+    <div class="logo">The Crazy Menu</div>
+    <div class="subtitle">Creative English Challenge</div>
+    <!-- Step 1: Name Input -->
+    <div id="step1">
+      <div class="input-group">
+        <label for="nameInput">Your Name</label>
+        <input type="text" id="nameInput" placeholder="Enter your name" autocomplete="off">
+      </div>
+      <button id="startBtn">Start Challenge</button>
+    </div>
+
+    <!-- Step 2: Game Interface -->
+    <div id="gameScreen" class="hidden">
+      <div class="word-list" id="wordList">
+        <!-- Words will appear here -->
+      </div>
+      <div class="timer" id="timer">60</div>
+      <textarea id="writingArea" placeholder="Write a creative story or passage using these words..."></textarea>
+      <button class="big-btn" id="finishBtn">Finish</button>
+    </div>
+
+    <!-- Step 3: Results -->
+    <div id="resultScreen" class="hidden result-section">
+      <button class="speak-btn" id="speakBtn">Speak & Evaluate</button>
+      <div class="ai-score hidden" id="aiScore"></div>
+      <button class="save-btn big-btn" id="saveBtn" style="display: none;">Save Data</button>
+    </div>
+  </div>
+
+  <button class="admin-btn hidden" id="adminBtn" title="Download all saved results as CSV">Admin: Download Results</button>
+
+  <script>
+    // ---------- Data Definitions ----------
+    const WORD_POOL = [
+      "delicious", "spicy", "gigantic", "tiny", "fantastic", "crunchy", "mysterious", "sparkling", "brave", "gentle",
+      "cheese", "pirate", "octopus", "island", "castle", "pencil", "adventure", "journey", "puzzle", "tiger",
+      "banana", "robot", "garden", "magic", "storm", "window", "chicken", "frosty", "laser", "rocket",
+      "chocolate", "flying", "invisible", "monster", "adventurer", "dream", "forest", "drum", "holiday", "whale",
+      "noodle", "secret", "apple", "frightening", "silent", "colorful", "brilliant", "potato", "cat", "umbrella",
+      "gentle", "jungle", "adventurous", "shiny", "mystery", "cloud", "orange", "parrot"
+    ];
+
+    // ---------- State Management ----------
+    let chosenWords = [];
+    let timerInterval = null;
+    let timeLeft = 60;
+    let currentName = '';
+    let aiScore = null;
+    let currentWriting = "";
+    let results = [];
+    // Load existing results if found:
+    if (localStorage.getItem("crazy_menu_results")) {
+      try {
+        results = JSON.parse(localStorage.getItem("crazy_menu_results"));
+        if (results.length > 0) {
+          document.getElementById('adminBtn').classList.remove('hidden');
+        }
+      } catch (e) {
+        results = [];
+      }
+    }
+
+    // ---------- UI Elements ----------
+    const step1 = document.getElementById('step1');
+    const gameScreen = document.getElementById('gameScreen');
+    const resultScreen = document.getElementById('resultScreen');
+    const startBtn = document.getElementById('startBtn');
+    const finishBtn = document.getElementById('finishBtn');
+    const nameInput = document.getElementById('nameInput');
+    const wordListDiv = document.getElementById('wordList');
+    const timerDiv = document.getElementById('timer');
+    const writingArea = document.getElementById('writingArea');
+    const speakBtn = document.getElementById('speakBtn');
+    const aiScoreDiv = document.getElementById('aiScore');
+    const saveBtn = document.getElementById('saveBtn');
+    const adminBtn = document.getElementById('adminBtn');
+
+    // ---------- Step Handlers ----------
+    function goToGame() {
+      // Prepare for the challenge
+      gameScreen.classList.remove('hidden');
+      step1.classList.add('hidden');
+      resultScreen.classList.add('hidden');
+      writingArea.value = "";
+      // Select 3 random words
+      chosenWords = [];
+      while (chosenWords.length < 3) {
+        let idx = Math.floor(Math.random() * WORD_POOL.length);
+        let word = WORD_POOL[idx];
+        if (!chosenWords.includes(word)) chosenWords.push(word);
+      }
+      wordListDiv.innerHTML = chosenWords.map(w => `<span>${w}</span>`).join('');
+      // Timer
+      timeLeft = 60;
+      timerDiv.textContent = timeLeft;
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        timerDiv.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          finishChallenge();
+        }
+      }, 1000);
+    }
+
+    function finishChallenge() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      // Copy latest writing data
+      currentWriting = writingArea.value.trim();
+      gameScreen.classList.add('hidden');
+      resultScreen.classList.remove('hidden');
+      aiScoreDiv.classList.add('hidden');
+      aiScoreDiv.textContent = '';
+      saveBtn.style.display = 'none';
+    }
+
+    function showAdminBtnIfResults() {
+      if (results.length > 0) {
+        adminBtn.classList.remove('hidden');
+      }
+    }
+
+    // ---------- Event Listeners ----------
+    startBtn.addEventListener('click', () => {
+      let name = nameInput.value.trim();
+      if (!name) {
+        nameInput.focus();
+        nameInput.style.borderColor = "#fd6464";
+        setTimeout(()=>{ nameInput.style.borderColor = "#ffd8b5"; }, 1100);
+        return;
+      }
+      currentName = name;
+      goToGame();
+    });
+
+    finishBtn.addEventListener('click', () => {
+      finishChallenge();
+    });
+
+    // When time is up, finishChallenge is called automatically
+
+    speakBtn.addEventListener('click', () => {
+      if(!currentWriting){
+        aiScoreDiv.textContent = "Please write something first!";
+        aiScoreDiv.classList.remove('hidden');
+        return;
+      }
+      // Web Speech API
+      if ('speechSynthesis' in window) {
+        const toSpeak = new SpeechSynthesisUtterance(currentWriting);
+        toSpeak.lang = 'en-US';
+        window.speechSynthesis.speak(toSpeak);
+      } else {
+        alert('Sorry, your browser does not support Web Speech API.');
+      }
+      // Generate AI Score
+      aiScore = Math.floor(80 + Math.random()*21); // 80~100 inclusive
+      aiScoreDiv.textContent = `AI Score: ${aiScore}/100`;
+      aiScoreDiv.classList.remove('hidden');
+      saveBtn.style.display = 'inline-block';
+    });
+
+    saveBtn.addEventListener('click', () => {
+      // Save student's data to localStorage
+      if(!aiScore || !currentName || chosenWords.length !== 3 || !currentWriting){
+        alert('Please complete the challenge and evaluation before saving.');
+        return;
+      }
+      let record = {
+        name: currentName,
+        words: chosenWords.slice(),
+        writing: currentWriting,
+        ai_score: aiScore,
+        timestamp: (new Date()).toISOString()
+      };
+      results.push(record);
+      localStorage.setItem("crazy_menu_results", JSON.stringify(results));
+      showAdminBtnIfResults();
+      // Reset UI for next student
+      alert('Saved! Ready for new student.');
+      // Clear everything for next student:
+      nameInput.value = '';
+      aiScore = null;
+      chosenWords = [];
+      currentWriting = '';
+      writingArea.value = '';
+      step1.classList.remove('hidden');
+      gameScreen.classList.add('hidden');
+      resultScreen.classList.add('hidden');
+      aiScoreDiv.classList.add('hidden');
+      aiScoreDiv.textContent = "";
+      saveBtn.style.display = 'none';
+      window.scrollTo(0,0);
+    });
+
+    // Enter key on name input triggers Start
+    nameInput.addEventListener('keydown', function(e) {
+      if(e.key === 'Enter'){
+        startBtn.click();
+      }
+    });
+
+    // ---------- Admin Download Button ----------
+    adminBtn.addEventListener('click', () => {
+      if(results.length === 0) {
+        alert("No data to export.");
+        return;
+      }
+      let csvContent = "data:text/csv;charset=utf-8," + 
+        "Name,Word 1,Word 2,Word 3,Writing,AI Score,Date\n" +
+        results.map(r => {
+          // Escape quotes
+          const safe = s=> '"' + String(s).replace(/"/g,'""') + '"';
+          return [
+            safe(r.name),
+            safe(r.words[0]), safe(r.words[1]), safe(r.words[2]),
+            safe(r.writing),
+            r.ai_score,
+            safe(r.timestamp.substr(0,19).replace('T',' '))
+          ].join(',');
+        }).join("\n");
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      const dateTag = (new Date()).toISOString().substr(0,10).replace(/-/g,'');
+      link.setAttribute("download", `crazy-menu-results-${dateTag}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+
+    // Reveal admin btn if results found already
+    showAdminBtnIfResults();
+    // Long-tap corner (mobile) or double click top left (desktop) to show Admin button
+    let adminKeyPressTimer = null;
+    document.addEventListener('pointerdown', e => {
+      if (e.target !== document.body && e.target !== document.documentElement)
+        return;
+      // if user presses near upper left corner
+      if (e.clientX < 35 && e.clientY < 35) {
+        adminKeyPressTimer = setTimeout(()=>{
+          adminBtn.classList.remove('hidden');
+        }, 1400);
+      }
+      // if pressed bottom area, reveal admin btn faster
+      if (window.innerHeight - e.clientY < 35 && window.innerWidth - e.clientX < 35) {
+        adminKeyPressTimer = setTimeout(()=>{
+          adminBtn.classList.remove('hidden');
+        }, 800);
+      }
+    });
+    document.addEventListener('pointerup', e=>{
+      if(adminKeyPressTimer) clearTimeout(adminKeyPressTimer);
+    });
+    let adminDblClickCount = 0, adminDblClickTimer = null;
+    document.addEventListener('dblclick', function(e){
+      if(e.clientX<35 && e.clientY<35){
+        adminDblClickCount++;
+        if(adminDblClickCount>1){
+          adminBtn.classList.remove('hidden');
+          adminDblClickCount=0;
+        }
+        if(adminDblClickTimer) clearTimeout(adminDblClickTimer);
+        adminDblClickTimer = setTimeout(()=>{adminDblClickCount=0;}, 2200);
+      }
+    });
+  </script>
+</body>
+<!-- Web Speech API and Evaluation UI -->
+<script>
+  // 隨機三個單字，實際應從題庫出，這裡示例
+  const targetWords = ['banana', 'elephant', 'river'];
+
+  // 創建相關 UI
+  const speakBtn = document.createElement('button');
+  speakBtn.textContent = 'Speak & Evaluate';
+  speakBtn.style.fontSize = '1.2em';
+  speakBtn.style.margin = '18px 0 6px 0';
+  document.body.appendChild(speakBtn);
+
+  const promptDiv = document.createElement('div');
+  promptDiv.textContent = `請在朗讀時盡量包含下列單字：${targetWords.join(', ')}`;
+  promptDiv.style.marginBottom = '10px';
+  document.body.appendChild(promptDiv);
+
+  const transcriptDiv = document.createElement('div');
+  transcriptDiv.style.fontFamily = 'monospace';
+  transcriptDiv.style.margin = '6px 0 10px 0';
+  transcriptDiv.style.minHeight = '32px';
+  transcriptDiv.style.padding = '6px';
+  transcriptDiv.style.border = '1px solid #eee';
+  transcriptDiv.style.background = '#f9f9fb';
+  document.body.appendChild(transcriptDiv);
+
+  const resultDiv = document.createElement('div');
+  resultDiv.style.marginTop = '8px';
+  resultDiv.style.padding = '8px';
+  resultDiv.style.fontWeight = 'bold';
+  resultDiv.style.fontSize = '1.1em';
+  resultDiv.style.display = 'none';
+  document.body.appendChild(resultDiv);
+
+  // 朗讀+評分流程
+  let recognition;
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    speakBtn.disabled = true;
+    speakBtn.textContent = '您的瀏覽器不支援語音辨識';
+    promptDiv.textContent = '請改用 Chrome、Edge 或其他支援語音辨識的瀏覽器。';
+  } else {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SR();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.continuous = false;
+
+    let evaluating = false;
+
+    speakBtn.onclick = function() {
+      if (evaluating) return;
+      // 重置
+      transcriptDiv.textContent = '';
+      resultDiv.style.display = 'none';
+      resultDiv.textContent = '';
+      evaluating = true;
+      speakBtn.textContent = 'Listening…';
+      recognition.start();
+    };
+
+    recognition.onresult = function(e) {
+      const transcript = Array.from(e.results)
+        .map(res => res[0].transcript)
+        .join(' ')
+        .trim();
+      transcriptDiv.textContent = transcript ? `你說：「${transcript}」` : '（未偵測到語音）';
+      const wordCount = transcript.trim().split(/\s+/).filter(Boolean).length;
+
+      // 判斷是否包含三個目標單字（不區分大小寫）
+      let matchedWords = 0;
+      const normalizedTranscript = transcript.toLowerCase();
+      targetWords.forEach(w => {
+        if (normalizedTranscript.includes(w.toLowerCase())) matchedWords++;
+      });
+
+      let score; let explanation;
+      // 分數規則
+      if (!transcript) {
+        score = 0;
+        explanation = '沒有偵測到語音，請再試一次。';
+      } else if (wordCount < 10) {
+        score = 60 + matchedWords*10; 
+        explanation = `字數較少（${wordCount} 字），分數較低。${matchedWords === 3 ? '' : `請確保包含全部單字（已含${matchedWords}個）。`}`;
+      } else if (matchedWords < 3) {
+        score = 75 + matchedWords*8; 
+        explanation = `字數足夠（${wordCount} 字），但沒包含全部單字。`;
+      } else {
+        score = Math.min(100, 90 + wordCount*0.5);
+        explanation = `字數充足（${wordCount} 字），且包含所有單字！`;
+      }
+
+      resultDiv.innerHTML = `【得分：${Math.round(score)}分】<br>${explanation}`;
+      resultDiv.style.display = '';
+      speakBtn.textContent = 'Speak & Evaluate';
+      evaluating = false;
+    };
+
+    recognition.onerror = function(e) {
+      transcriptDiv.textContent = '語音辨識出錯：' + e.error;
+      resultDiv.style.display = '';
+      resultDiv.innerHTML = '請再試一次，或檢查麥克風權限。';
+      speakBtn.textContent = 'Speak & Evaluate';
+      evaluating = false;
+    };
+
+    recognition.onend = function() {
+      if (evaluating) {
+        // 少數狀況 onresult 不會觸發
+        speakBtn.textContent = 'Speak & Evaluate';
+        evaluating = false;
+      }
+    };
+  }
+</script>
+<body>
+  <h2>口語練習：請包含下列三個單字</h2>
+  <div id="words"></div>
+  <button id="speakBtn">Speak & Evaluate</button>
+  <div id="transcript" style="margin-top:12px;color:#226;"></div>
+  <div id="result" style="margin-top:12px;font-weight:bold;"></div>
+  <script>
+    // 英文單字庫，可自行擴充
+    const wordBank = [
+      "apple", "future", "success", "life", "school",
+      "mom", "teacher", "music", "movie", "friend",
+      "vacation", "study", "hobby", "computer", "internet",
+      "book", "dream", "exercise", "family", "animal",
+      "sport", "English", "environment", "history", "work"
+    ];
+    // 隨機取出三個單字
+    const pickWords = () => {
+      const words = [];
+      while(words.length < 3) {
+        const c = wordBank[Math.floor(Math.random()*wordBank.length)];
+        if(!words.includes(c)) words.push(c);
+      }
+      return words;
+    };
+
+    let targetWords = pickWords();
+    document.getElementById('words').textContent = targetWords.join(' , ');
+
+    const speakBtn = document.getElementById('speakBtn');
+    const transcriptDiv = document.getElementById('transcript');
+    const resultDiv = document.getElementById('result');
+    let recognizing = false;
+    let evaluating = false;
+    let recognition;
+
+    // 確認 Web Speech API 是否可用
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      transcriptDiv.textContent = "很抱歉，您的瀏覽器不支援語音辨識。請改用 Chrome 或 Edge。";
+      speakBtn.disabled = true;
+    } else {
+      recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      speakBtn.onclick = () => {
+        if(evaluating) return;
+        transcriptDiv.textContent = "請開始說話...";
+        resultDiv.textContent = "";
+        recognition.start();
+        evaluating = true;
+        speakBtn.textContent = "辨識中...";
+      };
+
+      recognition.onresult = function(event) {
+        let transcript = event.results[0][0].transcript.trim();
+        transcriptDiv.textContent = transcript ? `你說：「${transcript}」` : '（未偵測到語音）';
+
+        const wordCount = transcript.trim().split(/\s+/).filter(Boolean).length;
+
+        // 比對三個單字（不區分大小寫）
+        const normalized = transcript.toLowerCase();
+        let matchedWords = 0;
+        targetWords.forEach(w => {
+          if(normalized.includes(w.toLowerCase())) matchedWords++;
+        });
+
+        let score = 0, explanation = '';
+        if (!transcript) {
+          score = 0;
+          explanation = '沒有偵測到語音，請再試一次。';
+        } else if (matchedWords < 3) {
+          score = 60+matchedWords*10;
+          explanation = `請確實包含全部三個指定單字（目前命中${matchedWords}個）。`;
+        } else if (wordCount < 10) {
+          score = 75+matchedWords*8;
+          explanation = `字數較少（${wordCount} 字），分數較低，但已有三個單字。`;
+        } else {
+          score = Math.min(100, 90+wordCount*0.5);
+          explanation = `字數充足（${wordCount} 字），而且包含所有指定單字！`;
+        }
+        resultDiv.innerHTML = `【得分：${Math.round(score)}分】<br>${explanation}`;
+        resultDiv.style.display = '';
+        speakBtn.textContent = 'Speak & Evaluate';
+        evaluating = false;
+      };
+
+      recognition.onerror = function(e) {
+        transcriptDiv.textContent = '語音辨識出錯：' + e.error;
+        resultDiv.style.display = '';
+        resultDiv.innerHTML = '請再試一次，或檢查麥克風權限。';
+        speakBtn.textContent = 'Speak & Evaluate';
+        evaluating = false;
+      };
+
+      recognition.onend = function() {
+        if (evaluating) {
+          // 少數情況下 onresult 不會觸發
+          speakBtn.textContent = 'Speak & Evaluate';
+          evaluating = false;
+        }
+      };
+    }
+  </script>
+</body>
+</html>
